@@ -1,7 +1,8 @@
 "use strict";
 //To do list:
-//need to figure out how to get an item to move across an image
-//need to figure out how to get this to work within the code in conjunction with the yards traveled
+//fix transparency of the football
+//create two point conversion option
+//recalibrate field goal option
 //get it so an image of a referee holding their arms up flashes each time there is a score
 //incorporate a safety scoring mechanism for when yardsToTouchdown > 100
 //rework the extra point scoring because it is bad
@@ -15,6 +16,11 @@
 function rollDice(sides){
     let diceRoll = Math.floor(Math.random() * sides) + 1;
     return diceRoll;
+}
+
+function calcBallPosition(currentYardage){
+    let position = ((currentYardage * .765) + 11.75) + "%";
+    document.getElementById("footballContainer").style.left = position;
 }
 
 function playKansasOffense(){
@@ -35,6 +41,7 @@ function playKansasOffense(){
             document.getElementById("messageDisplay").innerHTML = "TOUCHDOWN! Click Extra Point";
             let kansasScore = parseInt(document.getElementById("kansasScore").innerHTML);
             document.getElementById("kansasScore").innerHTML = kansasScore + touchdown;
+            document.getElementById("footballContainer").style.left = "67.25%";
         }
         else if(downCountUpdate < 5 && yardsToFirstDown <=0 && yardsToTouchdown <= 10 && yardsToTouchdown > 0){
             console.log("first and goal");
@@ -100,6 +107,7 @@ function resetGame(){
     document.getElementById("choosePlayButton").disabled = true;
     document.getElementById("rushButton").disabled = true;
     document.getElementById("passButton").disabled = true;
+    document.getElementById("footballContainer").style.left = "50%";
 }
 
 function missouriTurn(){
@@ -107,6 +115,7 @@ function missouriTurn(){
     let kansasPossessionsRemaining = parseInt(document.getElementById("kansasPossessionCounter").innerHTML);
     let missouriScore = parseInt(document.getElementById("missouriScore").innerHTML);
     let kansasScore = parseInt(document.getElementById("kansasScore").innerHTML);
+    let yardsToTouchdown = parseInt(document.getElementById("yardsToTouchdown").innerHTML);
     if(missouriPossessionsRemaining < 0){
         console.log("missouri possession zero or less than 0")
         document.getElementById("missouriButton").disabled = true;
@@ -159,6 +168,7 @@ function missouriTurn(){
             document.getElementById("messageDisplay").innerHTML = "Missouri didn't score. Click Kickoff.";
             let missouriScore = parseInt(document.getElementById("missouriScore").innerHTML);
             document.getElementById("missouriScore").innerHTML = missouriScore + score;
+            document.getElementById("footballContainer").style.left = "88.25%";
         }
         else if(opponentOutcome == 4 || opponentOutcome == 5){
             console.log("they scored a field goal");
@@ -166,6 +176,7 @@ function missouriTurn(){
             document.getElementById("messageDisplay").innerHTML = "Missouri kicked a field goal! Click Kickoff.";
             let missouriScore = parseInt(document.getElementById("missouriScore").innerHTML);
             document.getElementById("missouriScore").innerHTML = missouriScore + score;
+            calcBallPosition(yardsToTouchdown);
         }
         else if(opponentOutcome == 6){
             console.log("they scored a TD but missed the XP");
@@ -173,6 +184,7 @@ function missouriTurn(){
             document.getElementById("messageDisplay").innerHTML = "Missouri scored a Touchdown but missed the extra point! Click Kickoff.";
             let missouriScore = parseInt(document.getElementById("missouriScore").innerHTML);
             document.getElementById("missouriScore").innerHTML = missouriScore + score;
+            calcBallPosition(yardsToTouchdown);
         }
         else if(opponentOutcome == 7){
             console.log("they scored a TD and made the XP");
@@ -180,6 +192,7 @@ function missouriTurn(){
             document.getElementById("messageDisplay").innerHTML = "Missouri scored a Touchdown and the extra point! Click Kickoff.";
             let missouriScore = parseInt(document.getElementById("missouriScore").innerHTML);
             document.getElementById("missouriScore").innerHTML = missouriScore + score;
+            calcBallPosition(yardsToTouchdown);
         }
         else{
             console.log("they scored a TD and a two point conversion");
@@ -187,6 +200,7 @@ function missouriTurn(){
             document.getElementById("messageDisplay").innerHTML = "Missouri scored a Touchdown and the two-point conversion! Click Kickoff.";
             let missouriScore = parseInt(document.getElementById("missouriScore").innerHTML);
             document.getElementById("missouriScore").innerHTML = missouriScore + score;
+            calcBallPosition(yardsToTouchdown);
         }
         document.getElementById("kickoffButton").disabled = false;
     }
@@ -218,63 +232,84 @@ function kickoff(){
             document.getElementById("messageDisplay").innerHTML = "Kansas returned the kick for 10 yards! Click Next Play";
             document.getElementById("yardsToTouchdown").innerHTML = yardsToTouchdown - kickoff;
             document.getElementById("yardsToFirstDown").innerHTML = firstDownDistance;
+            let ballMovement = document.getElementById("yardsToTouchdown").innerHTML;
+            calcBallPosition(ballMovement);
         }
         else if(kickoffOutcome == 2){
             let kickoff = 20;
             document.getElementById("messageDisplay").innerHTML = "Kansas returned the kick for 20 yards! Click Next Play";
             document.getElementById("yardsToTouchdown").innerHTML = yardsToTouchdown - kickoff;
             document.getElementById("yardsToFirstDown").innerHTML = firstDownDistance;
+            let ballMovement = document.getElementById("yardsToTouchdown").innerHTML;
+            calcBallPosition(ballMovement);
         }
         else if(kickoffOutcome == 3){
             let kickoff = 30;
             document.getElementById("messageDisplay").innerHTML = "Kansas returned the kick for 30 yards! Click Next Play";
             document.getElementById("yardsToTouchdown").innerHTML = yardsToTouchdown - kickoff;
             document.getElementById("yardsToFirstDown").innerHTML = firstDownDistance;
+            let ballMovement = document.getElementById("yardsToTouchdown").innerHTML;
+            calcBallPosition(ballMovement);
         }
         else if(kickoffOutcome == 4){
             let kickoff = 40;
             document.getElementById("messageDisplay").innerHTML = "Kansas returned the kick for 40 yards! Click Next Play";
             document.getElementById("yardsToTouchdown").innerHTML = yardsToTouchdown - kickoff;
             document.getElementById("yardsToFirstDown").innerHTML = firstDownDistance;
+            let ballMovement = document.getElementById("yardsToTouchdown").innerHTML;
+            calcBallPosition(ballMovement);
         }
         else if(kickoffOutcome == 5){
             let kickoff = 50;
             document.getElementById("messageDisplay").innerHTML = "Kansas returned the kick for 50 yards! Click Next Play";
             document.getElementById("yardsToTouchdown").innerHTML = yardsToTouchdown - kickoff;
             document.getElementById("yardsToFirstDown").innerHTML = firstDownDistance;
+            let ballMovement = document.getElementById("yardsToTouchdown").innerHTML;
+            calcBallPosition(ballMovement);
         }
         else if(kickoffOutcome == 6){
             let kickoff = 60;
             document.getElementById("messageDisplay").innerHTML = "Kansas returned the kick for 60 yards! Click Next Play";
             document.getElementById("yardsToTouchdown").innerHTML = yardsToTouchdown - kickoff;
             document.getElementById("yardsToFirstDown").innerHTML = firstDownDistance;
+            let ballMovement = document.getElementById("yardsToTouchdown").innerHTML;
+            calcBallPosition(ballMovement);
         }
         else if(kickoffOutcome == 7){
             let kickoff = 70;
             document.getElementById("messageDisplay").innerHTML = "Kansas returned the kick for 70 yards! Click Next Play";
             document.getElementById("yardsToTouchdown").innerHTML = yardsToTouchdown - kickoff;
             document.getElementById("yardsToFirstDown").innerHTML = firstDownDistance;
+            let ballMovement = document.getElementById("yardsToTouchdown").innerHTML;
+            calcBallPosition(ballMovement);
         }
         else if(kickoffOutcome == 8){
             let kickoff = 80;
             document.getElementById("messageDisplay").innerHTML = "Kansas returned the kick for 80 yards! Click Next Play";
             document.getElementById("yardsToTouchdown").innerHTML = yardsToTouchdown - kickoff;
             document.getElementById("yardsToFirstDown").innerHTML = firstDownDistance;
+            let ballMovement = document.getElementById("yardsToTouchdown").innerHTML;
+            calcBallPosition(ballMovement);
         }
         else if(kickoffOutcome == 9){
             let kickoff = 90;
             document.getElementById("messageDisplay").innerHTML = "Kansas returned the kick for 90 yards! Click Next Play";
             document.getElementById("yardsToTouchdown").innerHTML = yardsToTouchdown - kickoff;
             document.getElementById("yardsToFirstDown").innerHTML = firstDownDistance;
+            let ballMovement = document.getElementById("yardsToTouchdown").innerHTML;
+            calcBallPosition(ballMovement);
         }
         else{
+            let kickoff = 100;
             document.getElementById("choosePlayButton").disabled = true;
             document.getElementById("extraPointButton").disabled = false;
             let touchdown = 6;
             document.getElementById("messageDisplay").innerHTML = "KANSAS RETURNED THE KICK FOR A TOUCHDOWN! Attempt the extra point!";
-            document.getElementById("yardsToTouchdown").innerHTML = 0;
+            document.getElementById("yardsToTouchdown").innerHTML = yardsToTouchdown - kickoff;
             let kansasScore = parseInt(document.getElementById("kansasScore").innerHTML);
             document.getElementById("kansasScore").innerHTML = kansasScore + touchdown;
+            let ballMovement = document.getElementById("yardsToTouchdown").innerHTML;
+            calcBallPosition(ballMovement);
             return kickoff;
         }
     }
@@ -303,7 +338,8 @@ function chooseRun(){
             document.getElementById("messageDisplay").innerHTML = "Kansas lost " + negativeRun + " yards. Click Next Play";
             document.getElementById("yardsToTouchdown").innerHTML = yardsToTouchdown + negativeRun;
             document.getElementById("yardsToFirstDown").innerHTML = yardsToFirstDown + negativeRun;
-            //need to generate the ability to move the player this many yards backwards
+            let ballMovement = document.getElementById("yardsToTouchdown").innerHTML;
+            calcBallPosition(ballMovement);
         }
         else if(rushOutcome == 3 || rushOutcome == 4){
             document.getElementById("messageDisplay").innerHTML = "Kansas runs for no gain. Click Next Play";
@@ -313,7 +349,9 @@ function chooseRun(){
             document.getElementById("messageDisplay").innerHTML = "Kansas rushed for " + positiveRun + " yards. Click Next Play";
             document.getElementById("yardsToTouchdown").innerHTML = yardsToTouchdown - positiveRun;
             document.getElementById("yardsToFirstDown").innerHTML = yardsToFirstDown - positiveRun;
-            //need to generate the ability to move the player this many yards forwards
+            let ballMovement = document.getElementById("yardsToTouchdown").innerHTML;
+            calcBallPosition(ballMovement);
+
         }
         else{
             document.getElementById("missouriButton").disabled = false;
@@ -325,6 +363,8 @@ function chooseRun(){
             document.getElementById("yardsToFirstDown").innerHTML = 10;
             let possessionCount = document.getElementById("kansasPossessionCounter").innerHTML;
             document.getElementById("kansasPossessionCounter").innerHTMl = possessionCount - 1;
+            let ballMovement = document.getElementById("yardsToTouchdown").innerHTML;
+            calcBallPosition(ballMovement);
         }
     }
     else{
@@ -358,6 +398,8 @@ function choosePass(){
             document.getElementById("yardsToTouchdown").innerHTML = 100;
             document.getElementById("downCounter").innerHTML = 0;
             document.getElementById("yardsToFirstDown").innerHTML = 10;
+            let ballMovement = document.getElementById("yardsToTouchdown").innerHTML;
+            calcBallPosition(ballMovement);
             return interception;
         }
         else if(passOutcome == 2){
@@ -365,6 +407,8 @@ function choosePass(){
             document.getElementById("messageDisplay").innerHTML = "Kansas was sacked for " + sack + " yards. Click Next Play.";
             document.getElementById("yardsToTouchdown").innerHTML = yardsToTouchdown - sack;
             document.getElementById("yardsToFirstDown").innerHTML = yardsToFirstDown - sack;
+            let ballMovement = document.getElementById("yardsToTouchdown").innerHTML;
+            calcBallPosition(ballMovement);
             return sack;
             //need to generate the ability to reset the down here and move
         }
@@ -377,6 +421,8 @@ function choosePass(){
             document.getElementById("messageDisplay").innerHTML = "Kansas completed a pass for " + shortPass + " yards. Click Next Play.";
             document.getElementById("yardsToTouchdown").innerHTML = yardsToTouchdown - shortPass;
             document.getElementById("yardsToFirstDown").innerHTML = yardsToFirstDown - shortPass;
+            let ballMovement = document.getElementById("yardsToTouchdown").innerHTML;
+            calcBallPosition(ballMovement);
             return shortPass;
             //need to generate the ability to move the player forward this amount of yards
         }
@@ -385,6 +431,8 @@ function choosePass(){
             document.getElementById("messageDisplay").innerHTML = "Kansas completed a pass for " + longPass + " yards. Click Next Play.";
             document.getElementById("yardsToTouchdown").innerHTML = yardsToTouchdown - longPass;
             document.getElementById("yardsToFirstDown").innerHTML = yardsToFirstDown - longPass;
+            let ballMovement = document.getElementById("yardsToTouchdown").innerHTML;
+            calcBallPosition(ballMovement);
             return longPass;
             //need to generate the ability to move the player forward this amount of yards
         }
@@ -397,6 +445,8 @@ function choosePass(){
             document.getElementById("kansasScore").innerHTML = kansasScore + touchdown;
             document.getElementById("yardsToTouchdown").innerHTML = 0;
             document.getElementById("yardsToFirstDown").innerHTML = 0;
+            let ballMovement = document.getElementById("yardsToTouchdown").innerHTML;
+            calcBallPosition(ballMovement);
             return touchdown;
             //need the ability to force it to move to the extra point mechanism
         }
@@ -422,6 +472,8 @@ function extraPoint(){
         document.getElementById("downCounter").innerHTML = 0;
         let kansasScore = parseInt(document.getElementById("kansasScore").innerHTML);
         document.getElementById("kansasScore").innerHTML = kansasScore + xp;
+        let ballMovement = document.getElementById("yardsToTouchdown").innerHTML;
+        calcBallPosition(ballMovement);
         return xp;
     }
     else if(xpOutcome == 2 || xpOutcome == 3){
@@ -433,6 +485,8 @@ function extraPoint(){
         document.getElementById("downCounter").innerHTML = 0;
         let kansasScore = parseInt(document.getElementById("kansasScore").innerHTML);
         document.getElementById("kansasScore").innerHTML = kansasScore + xp;
+        let ballMovement = document.getElementById("yardsToTouchdown").innerHTML;
+        calcBallPosition(ballMovement);
         return xp;
     }
     else{
@@ -444,6 +498,8 @@ function extraPoint(){
         document.getElementById("downCounter").innerHTML = 0;
         let kansasScore = parseInt(document.getElementById("kansasScore").innerHTML);
         document.getElementById("kansasScore").innerHTML = kansasScore + twoPoint;
+        let ballMovement = document.getElementById("yardsToTouchdown").innerHTML;
+            calcBallPosition(ballMovement);
         return twoPoint;
     }
 }
@@ -468,6 +524,8 @@ function fieldGoal(){
             document.getElementById("yardsToTouchdown").innerHTML = 100;
             document.getElementById("downCounter").innerHTML = 0;
             let kansasScore = parseInt(document.getElementById("kansasScore").innerHTML);
+            let ballMovement = document.getElementById("yardsToTouchdown").innerHTML;
+            calcBallPosition(ballMovement);
         }
         else{
             let fg = 3;
@@ -478,6 +536,8 @@ function fieldGoal(){
             document.getElementById("downCounter").innerHTML = 0;
             let kansasScore = parseInt(document.getElementById("kansasScore").innerHTML);
             document.getElementById("kansasScore").innerHTML = kansasScore + fg;
+            let ballMovement = document.getElementById("yardsToTouchdown").innerHTML;
+            calcBallPosition(ballMovement);
         }
     }
     else if(yardsToTouchdown <= 25){
@@ -489,6 +549,8 @@ function fieldGoal(){
             document.getElementById("yardsToTouchdown").innerHTML = 100;
             document.getElementById("downCounter").innerHTML = 0;
             let kansasScore = parseInt(document.getElementById("kansasScore").innerHTML);
+            let ballMovement = document.getElementById("yardsToTouchdown").innerHTML;
+            calcBallPosition(ballMovement);
         }
         else{
             let fg = 3;
@@ -499,6 +561,8 @@ function fieldGoal(){
             document.getElementById("downCounter").innerHTML = 0;
             let kansasScore = parseInt(document.getElementById("kansasScore").innerHTML);
             document.getElementById("kansasScore").innerHTML = kansasScore + fg;
+            let ballMovement = document.getElementById("yardsToTouchdown").innerHTML;
+            calcBallPosition(ballMovement);
         }
     }
 }

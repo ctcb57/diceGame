@@ -87,7 +87,7 @@
             <div class="col-sm-12 text-center" id="fieldContainer">
             <img src="images/footballFieldResized.png" alt="football field" class="image" id="footballField">
             <div id="footballContainer">
-                <img src="images/footballTransparent.png" alt="football" class="image" id="football">
+                <img src="images/newFootballTransparent.png" alt="football" class="image" id="football">
             </div>
             </div>
         </div>
@@ -104,23 +104,26 @@
     <!--functional button container-->
     <div class="container">
         <div class="row">
-            <div class="col-sm-4 text-center">
+            <div class="col-sm-3 text-center">
                 <div class="btn-group">
                     <button type="button" class="btn btn-primary" onclick="resetGame()">Reset Game</button>
                     <button type="button" class="btn btn-primary" onclick="missouriTurn()" id="missouriButton">Missouri Possession</button>
                 </div>
             </div>
-            <div class="col-sm-4 text-center">
+            <div class="col-sm-6 text-center">
                 <div class="btn-group">
                     <button type="button" class="btn btn-primary" onclick="kickoff()" id="kickoffButton">Kickoff</button>
                     <button type="button" class="btn btn-primary" onclick="extraPoint()" id="extraPointButton">Extra Point</button>
+                    <button type="button" class="btn btn-primary" onclick="twoPointConversion()" id="twoPointButton">Two Point Conversion</button>
                     <button type="button" class="btn btn-primary" onclick="fieldGoal()" id="fieldGoalButton">Field Goal</button>
                 </div>
             </div>
-            <div class="col-sm-4 text-center">
-                <button type="button" class="btn btn-primary" onclick="playKansasOffense()" id="choosePlayButton">NEXT PLAY</button>
-                <button type="button" class="btn btn-primary" onclick="chooseRun()" id="rushButton">RUSH</button>
-                <button type="button" class="btn btn-primary" onclick="choosePass()" id="passButton">PASS</button>
+            <div class="col-sm-3 text-center">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary" onclick="playKansasOffense()" id="choosePlayButton">NEXT PLAY</button>
+                    <button type="button" class="btn btn-primary" onclick="chooseRun()" id="rushButton">RUSH</button>
+                    <button type="button" class="btn btn-primary" onclick="choosePass()" id="passButton">PASS</button>
+                </div>
             </div>
         </div>
     </div>

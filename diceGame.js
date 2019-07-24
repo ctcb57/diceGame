@@ -1,16 +1,13 @@
 "use strict";
 //To do list:
-//fix transparency of the football
-//create two point conversion option
-//recalibrate field goal option
-//get it so an image of a referee holding their arms up flashes each time there is a score
-//incorporate a safety scoring mechanism for when yardsToTouchdown > 100
 //rework the extra point scoring because it is bad
+//create function that sets from opponents point of view
+//get it so an image of a referee holding their arms up flashes each time there is a score
 //create and integrate a function which chooses the number of possessions randomly
 //need to work on ensuring the scoring is relatively good
 //create a hail mary option that has high reward but low success rate at approximately 25% TD rate
 //BONUS: Figure out how to get Missouri to generate the rush, pass, and field goal mechanisms randomly rather than just generating a score randomly
-//Try to clean up the code if it is possible
+
 
 
 function rollDice(sides){
@@ -35,13 +32,27 @@ function playKansasOffense(){
     if(missouriPossessionsLeft > 0 || kansasPossessionsLeft >= 0){
         if(yardsToTouchdown < 1){
             document.getElementById("extraPointButton").disabled = false;
+            document.getElementById("twoPointButton").disabled = false;
             document.getElementById("choosePlayButton").disabled = true;
             console.log("need to kick the extra point");
             let touchdown = 6;
-            document.getElementById("messageDisplay").innerHTML = "TOUCHDOWN! Click Extra Point";
+            document.getElementById("messageDisplay").innerHTML = "TOUCHDOWN! Click Extra Point or Two Point Conversion";
             let kansasScore = parseInt(document.getElementById("kansasScore").innerHTML);
             document.getElementById("kansasScore").innerHTML = kansasScore + touchdown;
             document.getElementById("footballContainer").style.left = "67.25%";
+        }
+        else if(yardsToTouchdown > 100){
+            console.log("safety");
+            document.getElementById("choosePlayButton").disabled = true;
+            document.getElementById("missouriButton").disabled = false;
+            document.getElementById("possessionArrow").innerHTML = ">>>";
+            document.getElementById("downCounter").innerHTML = 0;
+            document.getElementById("yardsToTouchdown").innerHTML = 100;
+            document.getElementById("yardsToFirstDown").innerHTML = 10;
+            document.getElementById("messageDisplay").innerHTML = "SAFETY! MISSOURI SCORES! Click Missouri Possession.";
+            let safety = 2;
+            let missouriScore = parseInt(document.getElementById("missouriScore").innerHTML);
+            document.getElementById("missouriScore").innerHTML = missouriScore + safety;
         }
         else if(downCountUpdate < 5 && yardsToFirstDown <=0 && yardsToTouchdown <= 10 && yardsToTouchdown > 0){
             console.log("first and goal");
@@ -103,6 +114,7 @@ function resetGame(){
     document.getElementById("missouriButton").disabled = false;
     document.getElementById("kickoffButton").disabled = true;
     document.getElementById("extraPointButton").disabled = true;
+    document.getElementById("twoPointButton").disabled = true;
     document.getElementById("fieldGoalButton").disabled = true;
     document.getElementById("choosePlayButton").disabled = true;
     document.getElementById("rushButton").disabled = true;
@@ -220,6 +232,7 @@ function kickoff(){
         document.getElementById("rushButton").disabled = true;
         document.getElementById("passButton").disabled = true;
         document.getElementById("extraPointButton").disabled = true;
+        document.getElementById("twoPointButton").disabled = true;
         document.getElementById("fieldGoalButton").disabled = true;
     }
     else if(kansasPossessionsLeft - 1 >= 0){
@@ -303,8 +316,9 @@ function kickoff(){
             let kickoff = 100;
             document.getElementById("choosePlayButton").disabled = true;
             document.getElementById("extraPointButton").disabled = false;
+            document.getElementById("twoPointButton").disabled = false;
             let touchdown = 6;
-            document.getElementById("messageDisplay").innerHTML = "KANSAS RETURNED THE KICK FOR A TOUCHDOWN! Attempt the extra point!";
+            document.getElementById("messageDisplay").innerHTML = "KANSAS RETURNED FOR A TOUCHDOWN! Attempt the extra point or two point conversion!";
             document.getElementById("yardsToTouchdown").innerHTML = yardsToTouchdown - kickoff;
             let kansasScore = parseInt(document.getElementById("kansasScore").innerHTML);
             document.getElementById("kansasScore").innerHTML = kansasScore + touchdown;
@@ -438,9 +452,10 @@ function choosePass(){
         }
         else{
             document.getElementById("extraPointButton").disabled = false;
+            document.getElementById("twoPointButton").disabled = false;
             document.getElementById("choosePlayButton").disabled = true;
             let touchdown = 6;
-            document.getElementById("messageDisplay").innerHTML = "KANSAS PASSES FOR A TOUCHDOWN! Attempt the extra point!";
+            document.getElementById("messageDisplay").innerHTML = "KANSAS PASSES FOR A TOUCHDOWN! Attempt the extra point or 2PT conversion!";
             let kansasScore = parseInt(document.getElementById("kansasScore").innerHTML);
             document.getElementById("kansasScore").innerHTML = kansasScore + touchdown;
             document.getElementById("yardsToTouchdown").innerHTML = 0;
@@ -463,6 +478,7 @@ function extraPoint(){
     let xpOutcome = rollDice(4);
     document.getElementById("missouriButton").disabled = false;
     document.getElementById("extraPointButton").disabled = true;
+    document.getElementById("twoPointButton").disabled = true;
     if(xpOutcome == 1){
         let xp = 0;
         document.getElementById("messageDisplay").innerHTML = "Kansas missed the extra point! Click Missouri Possession";
@@ -500,6 +516,39 @@ function extraPoint(){
         document.getElementById("kansasScore").innerHTML = kansasScore + twoPoint;
         let ballMovement = document.getElementById("yardsToTouchdown").innerHTML;
             calcBallPosition(ballMovement);
+        return twoPoint;
+    }
+}
+
+function twoPointConversion(){
+    let twoPtOutcome = rollDice(4);
+    document.getElementById("missouriButton").disabled = false;
+    document.getElementById("extraPointButton").disabled = true;
+    document.getElementById("twoPointButton").disabled = true;
+    if(twoPtOutcome == 1 || twoPtOutcome ==2){
+        let twoPt = 0;
+        document.getElementById("messageDisplay").innerHTML = "Kansas failed the 2 PT Conversion! Click Missouri Possession";
+        document.getElementById("possessionArrow").innerHTML = ">>>";
+        document.getElementById("yardsToFirstDown").innerHTML = 10;
+        document.getElementById("yardsToTouchdown").innerHTML = 100;
+        document.getElementById("downCounter").innerHTML = 0;
+        let kansasScore = parseInt(document.getElementById("kansasScore").innerHTML);
+        document.getElementById("kansasScore").innerHTML = kansasScore + twoPt;
+        let ballMovement = document.getElementById("yardsToTouchdown").innerHTML;
+        calcBallPosition(ballMovement);
+        return twoPt;
+    }
+    else{
+        let twoPoint = 2;
+        document.getElementById("messageDisplay").innerHTML = "Kansas went for the two point conversion and converted! Click Missouri Possession";
+        document.getElementById("possessionArrow").innerHTML = ">>>";
+        document.getElementById("yardsToFirstDown").innerHTML = 10;
+        document.getElementById("yardsToTouchdown").innerHTML = 100;
+        document.getElementById("downCounter").innerHTML = 0;
+        let kansasScore = parseInt(document.getElementById("kansasScore").innerHTML);
+        document.getElementById("kansasScore").innerHTML = kansasScore + twoPoint;
+        let ballMovement = document.getElementById("yardsToTouchdown").innerHTML;
+        calcBallPosition(ballMovement);
         return twoPoint;
     }
 }

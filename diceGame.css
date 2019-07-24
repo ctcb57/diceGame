@@ -1,0 +1,81 @@
+body{
+    background-color: gray;
+}
+
+#footballContainer{
+    width: 50px;
+    height: 30px;
+    position: absolute;
+    top: 50%;
+    left: 0%;
+    transform: translateX(-50%);
+}
+
+#football{
+    width: 50px;
+    height: 30px;
+}
+
+#footballField{
+    width: 900px;
+}
+
+#fieldContainer{
+    max-width: 900px;
+    margin: auto;
+    padding: 0;
+}
+
+h1, h3, h5{
+    font-family: impact, sans-serif;
+    color: white;
+    text-decoration: underline;
+}
+
+#kansasLabel{
+    font-family: impact, sans-serif;
+    text-decoration: underline;
+    color: blue;
+}
+
+#missouriLabel{
+    font-family: impact, sans-serif;
+    text-decoration: underline;
+    color: black;
+}
+
+h6, #messageDisplay, #missouriPossessionCounter, #kansasPossessionCounter{
+    font-family: impact, sans-serif;
+    color: white;
+}
+
+#messageDisplay{
+    font-family: impact, sans-serif;
+    color: white;
+    background-color: black;
+    font-size: 25px;
+}
+
+#missouriScore{
+    font-family: impact, sans-serif;
+    color:gold;
+    font-size: 30px;
+}
+
+#kansasScore{
+    font-family: impact, sans-serif;
+    color: crimson;
+    font-size: 30px;
+}
+
+p{
+    font-family: impact, sans-serif;
+    color: white;
+    font-size: 15px;
+}
+
+.btn.btn-primary{
+    background-color: red;
+    font-family: impact, sans-serif;
+    color: white;
+}

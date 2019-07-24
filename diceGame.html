@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF -8">
+    <title>BORDER WAR FOOTBALL</title>
+    <meta name="description" content="a javascript football game">
+    <meta name="keywords" content="kansas, missouri, football, game, dice game">
+    <meta name="author" content="Charles Clark">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="diceGame.css">
+</head>
+<body>
+    <!--Title container-->
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-3"></div>
+            <div class="col-sm-6 text-center">
+                <h1>BORDER WAR FOOTBALL</h1>
+            </div>
+            <div class="col-sm-3"></div>
+        </div>
+    </div>
+    <br><br>
+    <!--Scoreboard container-->
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-5 text-center">
+                <h3 id="kansasLabel">KANSAS</h3>
+            </div>
+            <div class="col-sm-2 text-center">
+                <h5>POSSESSION</h5>
+            </div>
+            <div class="col-sm-5 text-center">
+                <h3 id="missouriLabel">MISSOURI</h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-5 text-center">
+                <p id="kansasScore" type="number" value="0">0</p>
+            </div>
+            <div class="col-sm-2 text-center">
+                <p id="possessionArrow" type="text" value=">>>">>>></p>
+            </div>
+            <div class="col-sm-5 text-center">
+                <p id="missouriScore" type="number" value="0">0</p>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-sm-2 text-center">
+                <h5>DOWN</h5>
+            </div>
+            <div class="col-sm-2 text-center">
+                <h5>TO GO</h5>
+            </div>
+            <div class="col-sm-2 text-center">
+                <h5>YARDS TO TD</h5>
+            </div>
+            <div class="col-sm-3 text-center">
+                <h5>KU POSSESSIONS LEFT</h5>
+            </div>
+            <div class="col-sm-3 text-center">
+                <h5>MU POSSESSIONS LEFT</h5>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-2 text-center">
+                <h6 id="downCounter" type="number" value="0">0</h6>
+            </div>
+            <div class="col-sm-2 text-center">
+                <h6 id="yardsToFirstDown" type="number" value="10">10</h6>
+            </div>
+            <div class="col-sm-2 text-center">
+                <h6 id="yardsToTouchdown" type="number" value="100">100</h6>
+            </div>
+            <div class="col-sm-3 text-center">
+                <h6 id="kansasPossessionCounter" type="number" value="12">12</h6>
+            </div>
+            <div class="col-sm-3 text-center">
+                <h6 id="missouriPossessionCounter" type="number" value="12">12</h6>
+            </div>
+        </div>
+    </div>
+    <br><br>
+    <!--football field and message container-->
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12 text-center" id="fieldContainer">
+            <img src="images/footballFieldCropped.png" alt="football field" class="image" id="footballField">
+            <div id="footballContainer">
+                <img src="images/footballTransparent.png" alt="football" class="image" id="football">
+            </div>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-8 text-center">
+                <h6 id="messageDisplay">Click Missouri Possession to Start!</h6>
+            </div>
+            <div class="col-sm-2"></div>
+        </div>
+    </div>
+    <br>
+    <!--functional button container-->
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-4 text-center">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary" onclick="resetGame()">Reset Game</button>
+                    <button type="button" class="btn btn-primary" onclick="missouriTurn()" id="missouriButton">Missouri Possession</button>
+                </div>
+            </div>
+            <div class="col-sm-4 text-center">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary" onclick="kickoff()" id="kickoffButton">Kickoff</button>
+                    <button type="button" class="btn btn-primary" onclick="extraPoint()" id="extraPointButton">Extra Point</button>
+                    <button type="button" class="btn btn-primary" onclick="fieldGoal()" id="fieldGoalButton">Field Goal</button>
+                </div>
+            </div>
+            <div class="col-sm-4 text-center">
+                <button type="button" class="btn btn-primary" onclick="playKansasOffense()" id="choosePlayButton">NEXT PLAY</button>
+                <button type="button" class="btn btn-primary" onclick="chooseRun()" id="rushButton">RUSH</button>
+                <button type="button" class="btn btn-primary" onclick="choosePass()" id="passButton">PASS</button>
+            </div>
+        </div>
+    </div>
+    <br><br>
+    <!--instructions container-->
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-4"></div>
+            <div class="col-sm-4 text-center">
+                <h5>INSTRUCTIONS</h5>
+            </div>
+            <div class="col-sm-4"></div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 text center">
+                <p>STEP 1: Click Missouri Possession to generate their first outcome</p>
+                <p>STEP 2: Click Kickoff to start your possession</p>
+                <p>STEP 3: Use the rush and pass buttons to choose your play and attempt to score a touchdown</p>
+                <p>STEP 4: After each possession, start back at step 1 until there are zero possessions remaining. Click reset game to play again.</p>
+            </div>
+        </div>
+    </div>
+
+<script src="diceGame.js" type="text/javascript"></script>
+</body>

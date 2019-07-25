@@ -1,10 +1,4 @@
 "use strict";
-//To do list:
-//recalibrate the kickoff values
-//get it so an image of a referee holding their arms up flashes each time there is a score
-//create a hail mary option that has high reward but low success rate at approximately 10% TD rate on viable if down by more than 8 points
-
-
 
 
 function rollDice(sides){
@@ -134,6 +128,8 @@ function playKansasOffense(){
 }
 function overtime(){
     document.getElementById("downCounter").innerHTML = 0;
+    document.getElementById("missouriPossessionCounter").innerHTML = 3;
+    document.getElementById("kansasPossessionCounter").innerHTML = 3;
     document.getElementById("yardsToFirstDown").innerHTML = 10;
     document.getElementById("possessionArrow").innerHTML = ">>>";
     document.getElementById("missouriButton").disabled = false;

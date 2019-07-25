@@ -1,8 +1,10 @@
 "use strict";
 //To do list:
+//recalculate the fumble capabilities because it happens way too often
+//tweak passing just a bit to make it a bit less accure and to decrease how often long passess occur
 //get it so an image of a referee holding their arms up flashes each time there is a score
 //create and integrate a function which chooses the number of possessions randomly
-//create a hail mary option that has high reward but low success rate at approximately 25% TD rate on viable if down by more than 8 points
+//create a hail mary option that has high reward but low success rate at approximately 10% TD rate on viable if down by more than 8 points
 //BONUS: Figure out how to get Missouri to generate the rush, pass, and field goal mechanisms randomly rather than just generating a score randomly
 
 
@@ -15,16 +17,31 @@ function rollDice(sides){
 function calcBallPosition(currentYardage){
     let position = (((100 - currentYardage) * .765) + 11.75) + "%";
     document.getElementById("footballContainer").style.left = position;
+    let diceRoll = rollDice(3);
+    if(diceRoll == 1){
+        document.getElementById("footballContainer").style.top = "20%";
+    }
+    else if(diceRoll == 2){
+        document.getElementById("footballContainer").style.top = "50%";
+    }
+    else{
+        document.getElementById("footballContainer").style.top = "75%";
+    }
 }
 
-function calcBallPositionMissouri(currentYardage){
-    let position = ((currentYardage * .765) + 11.75) + "%";
+function calcBallPositionMissouri(){
+    let position = "11.75%";
     document.getElementById("footballContainer").style.left = position;
-}
-
-function calcBallPositionMissouriNoScore(currentYardage){
-    let position = ((currentYardage * .765) - 7.375) + "%";
-    document.getElementById("footballContainer").style.left = position;
+    let diceRoll = rollDice(3);
+    if(diceRoll == 1){
+        document.getElementById("footballContainer").style.top = "20%";
+    }
+    else if(diceRoll == 2){
+        document.getElementById("footballContainer").style.top = "50%";
+    }
+    else{
+        document.getElementById("footballContainer").style.top = "75%";
+    }
 }
 
 function playKansasOffense(){
@@ -46,7 +63,7 @@ function playKansasOffense(){
             document.getElementById("messageDisplay").innerHTML = "TOUCHDOWN! Click Extra Point or Two Point Conversion";
             let kansasScore = parseInt(document.getElementById("kansasScore").innerHTML);
             document.getElementById("kansasScore").innerHTML = kansasScore + touchdown;
-            document.getElementById("footballContainer").style.left = "67.25%";
+            calcBallPosition(yardsToTouchdown);
         }
         else if(yardsToTouchdown > 100){
             console.log("safety");
@@ -54,12 +71,13 @@ function playKansasOffense(){
             document.getElementById("missouriButton").disabled = false;
             document.getElementById("possessionArrow").innerHTML = ">>>";
             document.getElementById("downCounter").innerHTML = 0;
-            document.getElementById("yardsToTouchdown").innerHTML = 100;
+            document.getElementById("yardsToTouchdown").innerHTML = 0;
             document.getElementById("yardsToFirstDown").innerHTML = 10;
             document.getElementById("messageDisplay").innerHTML = "SAFETY! MISSOURI SCORES! Click Missouri Possession.";
             let safety = 2;
             let missouriScore = parseInt(document.getElementById("missouriScore").innerHTML);
             document.getElementById("missouriScore").innerHTML = missouriScore + safety;
+            calcBallPosition(yardsToTouchdown);
         }
         else if(downCountUpdate < 5 && yardsToFirstDown <=0 && yardsToTouchdown <= 10 && yardsToTouchdown > 0){
             console.log("first and goal");
@@ -101,7 +119,6 @@ function playKansasOffense(){
             document.getElementById("missouriButton").disabled = false;
             document.getElementById("possessionArrow").innerHTML = ">>>";
             document.getElementById("downCounter").innerHTML = 0;
-            document.getElementById("yardsToTouchdown").innerHTML = 100;
             document.getElementById("yardsToFirstDown").innerHTML = 10;
             document.getElementById("messageDisplay").innerHTML = "Kansas failed to convert the fourth down.  Click Missouri Possession.";
         }
@@ -110,7 +127,6 @@ function playKansasOffense(){
 function overtime(){
     document.getElementById("downCounter").innerHTML = 0;
     document.getElementById("yardsToFirstDown").innerHTML = 10;
-    document.getElementById("yardsToTouchdown").innerHTML = 100;
     document.getElementById("possessionArrow").innerHTML = ">>>";
     document.getElementById("missouriButton").disabled = false;
     document.getElementById("kickoffButton").disabled = true;
@@ -128,7 +144,6 @@ function resetGame(){
     document.getElementById("kansasScore").innerHTML = 0;
     document.getElementById("downCounter").innerHTML = 0;
     document.getElementById("yardsToFirstDown").innerHTML = 10;
-    document.getElementById("yardsToTouchdown").innerHTML = 100;
     document.getElementById("missouriPossessionCounter").innerHTML = 12;
     document.getElementById("kansasPossessionCounter").innerHTML = 12;
     document.getElementById("messageDisplay").innerHTML = "Click Missouri Possession to Start!";
@@ -145,6 +160,7 @@ function resetGame(){
 }
 
 function missouriTurn(){
+    document.getElementById("yardsToTouchdown").innerHTML = 100;
     let missouriPossessionsRemaining = parseInt(document.getElementById("missouriPossessionCounter").innerHTML);
     let kansasPossessionsRemaining = parseInt(document.getElementById("kansasPossessionCounter").innerHTML);
     let missouriScore = parseInt(document.getElementById("missouriScore").innerHTML);
@@ -203,7 +219,7 @@ function missouriTurn(){
             document.getElementById("messageDisplay").innerHTML = "Missouri didn't score. Click Kickoff.";
             let missouriScore = parseInt(document.getElementById("missouriScore").innerHTML);
             document.getElementById("missouriScore").innerHTML = missouriScore + score;
-            calcBallPositionMissouriNoScore(yardsToTouchdown);
+            calcBallPositionMissouri();
         }
         else if(opponentOutcome == 10 || opponentOutcome == 11 || opponentOutcome == 12){
             console.log("they scored a field goal");
@@ -211,7 +227,7 @@ function missouriTurn(){
             document.getElementById("messageDisplay").innerHTML = "Missouri kicked a field goal! Click Kickoff.";
             let missouriScore = parseInt(document.getElementById("missouriScore").innerHTML);
             document.getElementById("missouriScore").innerHTML = missouriScore + score;
-            calcBallPositionMissouri(yardsToTouchdown);
+            calcBallPositionMissouri();
         }
         else if(opponentOutcome == 13){
             console.log("they scored a TD but missed the XP");
@@ -219,7 +235,7 @@ function missouriTurn(){
             document.getElementById("messageDisplay").innerHTML = "Missouri scored a Touchdown but missed the extra point! Click Kickoff.";
             let missouriScore = parseInt(document.getElementById("missouriScore").innerHTML);
             document.getElementById("missouriScore").innerHTML = missouriScore + score;
-            calcBallPositionMissouri(yardsToTouchdown);
+            calcBallPositionMissouri();
         }
         else if(opponentOutcome == 14 || opponentOutcome == 15){
             console.log("they scored a TD and made the XP");
@@ -227,7 +243,7 @@ function missouriTurn(){
             document.getElementById("messageDisplay").innerHTML = "Missouri scored a Touchdown and the extra point! Click Kickoff.";
             let missouriScore = parseInt(document.getElementById("missouriScore").innerHTML);
             document.getElementById("missouriScore").innerHTML = missouriScore + score;
-            calcBallPositionMissouri(yardsToTouchdown);
+            calcBallPositionMissouri();
         }
         else{
             console.log("they scored a TD and a two point conversion");
@@ -235,7 +251,7 @@ function missouriTurn(){
             document.getElementById("messageDisplay").innerHTML = "Missouri scored a Touchdown and the two-point conversion! Click Kickoff.";
             let missouriScore = parseInt(document.getElementById("missouriScore").innerHTML);
             document.getElementById("missouriScore").innerHTML = missouriScore + score;
-            calcBallPositionMissouri(yardsToTouchdown);
+            calcBallPositionMissouri();
         }
         document.getElementById("kickoffButton").disabled = false;
     }
@@ -396,7 +412,6 @@ function chooseRun(){
             document.getElementById("messageDisplay").innerHTML = "KANSAS FUMBLES! Click Missouri Possession";
             document.getElementById("possessionArrow").innerHTML = ">>>";
             document.getElementById("downCounter").innerHTML = 0;
-            document.getElementById("yardsToTouchdown").innerHTML = 100;
             document.getElementById("yardsToFirstDown").innerHTML = 10;
             let possessionCount = document.getElementById("kansasPossessionCounter").innerHTML;
             document.getElementById("kansasPossessionCounter").innerHTMl = possessionCount - 1;
@@ -432,7 +447,6 @@ function choosePass(){
             document.getElementById("possessionArrow").innerHTML = ">>>";
             let possessionCount = document.getElementById("kansasPossessionCounter").innerHTML;
             document.getElementById("kansasPossessionCounter").innerHTMl = possessionCount - 1;
-            document.getElementById("yardsToTouchdown").innerHTML = 100;
             document.getElementById("downCounter").innerHTML = 0;
             document.getElementById("yardsToFirstDown").innerHTML = 10;
             let ballMovement = document.getElementById("yardsToTouchdown").innerHTML;
@@ -507,7 +521,7 @@ function extraPoint(){
         document.getElementById("messageDisplay").innerHTML = "Kansas missed the extra point! Click Missouri Possession";
         document.getElementById("possessionArrow").innerHTML = ">>>";
         document.getElementById("yardsToFirstDown").innerHTML = 10;
-        document.getElementById("yardsToTouchdown").innerHTML = 100;
+        document.getElementById("yardsToTouchdown").innerHTML = 0;
         document.getElementById("downCounter").innerHTML = 0;
         let kansasScore = parseInt(document.getElementById("kansasScore").innerHTML);
         document.getElementById("kansasScore").innerHTML = kansasScore + xp;
@@ -520,7 +534,7 @@ function extraPoint(){
         document.getElementById("messageDisplay").innerHTML = "Extra point good! Click Missouri Possession";
         document.getElementById("possessionArrow").innerHTML = ">>>";
         document.getElementById("yardsToFirstDown").innerHTML = 10;
-        document.getElementById("yardsToTouchdown").innerHTML = 100;
+        document.getElementById("yardsToTouchdown").innerHTML = 0;
         document.getElementById("downCounter").innerHTML = 0;
         let kansasScore = parseInt(document.getElementById("kansasScore").innerHTML);
         document.getElementById("kansasScore").innerHTML = kansasScore + xp;
@@ -540,7 +554,7 @@ function twoPointConversion(){
         document.getElementById("messageDisplay").innerHTML = "Kansas failed the 2 PT Conversion! Click Missouri Possession";
         document.getElementById("possessionArrow").innerHTML = ">>>";
         document.getElementById("yardsToFirstDown").innerHTML = 10;
-        document.getElementById("yardsToTouchdown").innerHTML = 100;
+        document.getElementById("yardsToTouchdown").innerHTML = 0;
         document.getElementById("downCounter").innerHTML = 0;
         let kansasScore = parseInt(document.getElementById("kansasScore").innerHTML);
         document.getElementById("kansasScore").innerHTML = kansasScore + twoPt;
@@ -553,7 +567,7 @@ function twoPointConversion(){
         document.getElementById("messageDisplay").innerHTML = "Kansas went for the two point conversion and converted! Click Missouri Possession";
         document.getElementById("possessionArrow").innerHTML = ">>>";
         document.getElementById("yardsToFirstDown").innerHTML = 10;
-        document.getElementById("yardsToTouchdown").innerHTML = 100;
+        document.getElementById("yardsToTouchdown").innerHTML = 0;
         document.getElementById("downCounter").innerHTML = 0;
         let kansasScore = parseInt(document.getElementById("kansasScore").innerHTML);
         document.getElementById("kansasScore").innerHTML = kansasScore + twoPoint;
@@ -580,7 +594,7 @@ function fieldGoal(){
             document.getElementById("messageDisplay").innerHTML = "Kansas missed the Field Goal! Click Missouri Possession";
             document.getElementById("possessionArrow").innerHTML = ">>>";
             document.getElementById("yardsToFirstDown").innerHTML = 10;
-            document.getElementById("yardsToTouchdown").innerHTML = 100;
+            document.getElementById("yardsToTouchdown").innerHTML = 0;
             document.getElementById("downCounter").innerHTML = 0;
             let kansasScore = parseInt(document.getElementById("kansasScore").innerHTML);
             let ballMovement = document.getElementById("yardsToTouchdown").innerHTML;
@@ -591,7 +605,7 @@ function fieldGoal(){
             document.getElementById("messageDisplay").innerHTML = "Field goal good! Click Missouri Possession";
             document.getElementById("possessionArrow").innerHTML = ">>>";
             document.getElementById("yardsToFirstDown").innerHTML = 10;
-            document.getElementById("yardsToTouchdown").innerHTML = 100;
+            document.getElementById("yardsToTouchdown").innerHTML = 0;
             document.getElementById("downCounter").innerHTML = 0;
             let kansasScore = parseInt(document.getElementById("kansasScore").innerHTML);
             document.getElementById("kansasScore").innerHTML = kansasScore + fg;
@@ -605,7 +619,7 @@ function fieldGoal(){
             document.getElementById("messageDisplay").innerHTML = "Kansas missed the Field Goal! Click Missouri Possession";
             document.getElementById("possessionArrow").innerHTML = ">>>";
             document.getElementById("yardsToFirstDown").innerHTML = 10;
-            document.getElementById("yardsToTouchdown").innerHTML = 100;
+            document.getElementById("yardsToTouchdown").innerHTML = 0;
             document.getElementById("downCounter").innerHTML = 0;
             let kansasScore = parseInt(document.getElementById("kansasScore").innerHTML);
             let ballMovement = document.getElementById("yardsToTouchdown").innerHTML;
@@ -616,7 +630,7 @@ function fieldGoal(){
             document.getElementById("messageDisplay").innerHTML = "Field goal good! Click Missouri Possession";
             document.getElementById("possessionArrow").innerHTML = ">>>";
             document.getElementById("yardsToFirstDown").innerHTML = 10;
-            document.getElementById("yardsToTouchdown").innerHTML = 100;
+            document.getElementById("yardsToTouchdown").innerHTML = 0;
             document.getElementById("downCounter").innerHTML = 0;
             let kansasScore = parseInt(document.getElementById("kansasScore").innerHTML);
             document.getElementById("kansasScore").innerHTML = kansasScore + fg;

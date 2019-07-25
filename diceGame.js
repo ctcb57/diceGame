@@ -1,7 +1,5 @@
 "use strict";
 //To do list:
-//recalculate the fumble capabilities because it happens way too often
-//tweak passing just a bit to make it a bit less accure and to decrease how often long passess occur
 //get it so an image of a referee holding their arms up flashes each time there is a score
 //create and integrate a function which chooses the number of possessions randomly
 //create a hail mary option that has high reward but low success rate at approximately 10% TD rate on viable if down by more than 8 points
@@ -407,16 +405,22 @@ function chooseRun(){
 
         }
         else{
-            document.getElementById("missouriButton").disabled = false;
-            document.getElementById("choosePlayButton").disabled = true;
-            document.getElementById("messageDisplay").innerHTML = "KANSAS FUMBLES! Click Missouri Possession";
-            document.getElementById("possessionArrow").innerHTML = ">>>";
-            document.getElementById("downCounter").innerHTML = 0;
-            document.getElementById("yardsToFirstDown").innerHTML = 10;
-            let possessionCount = document.getElementById("kansasPossessionCounter").innerHTML;
-            document.getElementById("kansasPossessionCounter").innerHTMl = possessionCount - 1;
-            let ballMovement = document.getElementById("yardsToTouchdown").innerHTML;
-            calcBallPosition(ballMovement);
+            let fumbleOutcome = rollDice(3)
+            if(fumbleOutcome == 1){
+                document.getElementById("missouriButton").disabled = false;
+                document.getElementById("choosePlayButton").disabled = true;
+                document.getElementById("messageDisplay").innerHTML = "KANSAS FUMBLES AND LOSES THE BALL! Click Missouri Possession";
+                document.getElementById("possessionArrow").innerHTML = ">>>";
+                document.getElementById("downCounter").innerHTML = 0;
+                document.getElementById("yardsToFirstDown").innerHTML = 10;
+                let possessionCount = document.getElementById("kansasPossessionCounter").innerHTML;
+                document.getElementById("kansasPossessionCounter").innerHTMl = possessionCount - 1;
+                let ballMovement = document.getElementById("yardsToTouchdown").innerHTML;
+                calcBallPosition(ballMovement);
+            }
+            else{
+                document.getElementById("messageDisplay").innerHTML = "KANSAS FUMBLES BUT RETAINS POSSSESSION! Click Next Play";
+            }
         }
     }
     else{
@@ -463,11 +467,11 @@ function choosePass(){
             return sack;
             //need to generate the ability to reset the down here and move
         }
-        else if(passOutcome == 4 || passOutcome == 5 || passOutcome == 6 || passOutcome == 7 || passOutcome == 8){
+        else if(passOutcome == 4 || passOutcome == 5 || passOutcome == 6 || passOutcome == 7 || passOutcome == 8 || passOutcome == 9){
             document.getElementById("messageDisplay").innerHTML = "Kansas' pass is incomplete.  Click Next Play.";
             //need to generate the ability to reset the down here
         }
-        else if(passOutcome == 9 || passOutcome == 10 || passOutcome == 11 || passOutcome == 12 || passOutcome == 13 || passOutcome == 14 || passOutcome == 15){
+        else if(passOutcome == 10 || passOutcome == 11 || passOutcome == 12 || passOutcome == 13 || passOutcome == 14 || passOutcome == 15 || passOutcome == 16){
             let shortPass = rollDice(10);
             document.getElementById("messageDisplay").innerHTML = "Kansas completed a pass for " + shortPass + " yards. Click Next Play.";
             document.getElementById("yardsToTouchdown").innerHTML = yardsToTouchdown - shortPass;
@@ -477,7 +481,7 @@ function choosePass(){
             return shortPass;
             //need to generate the ability to move the player forward this amount of yards
         }
-        else if(passOutcome == 16 || passOutcome == 17 || passOutcome == 18 || passOutcome == 20){
+        else if(passOutcome == 17 || passOutcome == 18 || passOutcome == 19){
             let longPass = rollDice(20);
             document.getElementById("messageDisplay").innerHTML = "Kansas completed a pass for " + longPass + " yards. Click Next Play.";
             document.getElementById("yardsToTouchdown").innerHTML = yardsToTouchdown - longPass;

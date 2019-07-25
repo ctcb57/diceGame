@@ -1,11 +1,8 @@
 "use strict";
 //To do list:
-//rework the extra point scoring because it is bad
-//create function that sets from opponents point of view
 //get it so an image of a referee holding their arms up flashes each time there is a score
 //create and integrate a function which chooses the number of possessions randomly
-//need to work on ensuring the scoring is relatively good
-//create a hail mary option that has high reward but low success rate at approximately 25% TD rate
+//create a hail mary option that has high reward but low success rate at approximately 25% TD rate on viable if down by more than 8 points
 //BONUS: Figure out how to get Missouri to generate the rush, pass, and field goal mechanisms randomly rather than just generating a score randomly
 
 
@@ -16,7 +13,17 @@ function rollDice(sides){
 }
 
 function calcBallPosition(currentYardage){
+    let position = (((100 - currentYardage) * .765) + 11.75) + "%";
+    document.getElementById("footballContainer").style.left = position;
+}
+
+function calcBallPositionMissouri(currentYardage){
     let position = ((currentYardage * .765) + 11.75) + "%";
+    document.getElementById("footballContainer").style.left = position;
+}
+
+function calcBallPositionMissouriNoScore(currentYardage){
+    let position = ((currentYardage * .765) - 7.375) + "%";
     document.getElementById("footballContainer").style.left = position;
 }
 
@@ -100,6 +107,21 @@ function playKansasOffense(){
         }
     }
 }
+function overtime(){
+    document.getElementById("downCounter").innerHTML = 0;
+    document.getElementById("yardsToFirstDown").innerHTML = 10;
+    document.getElementById("yardsToTouchdown").innerHTML = 100;
+    document.getElementById("possessionArrow").innerHTML = ">>>";
+    document.getElementById("missouriButton").disabled = false;
+    document.getElementById("kickoffButton").disabled = true;
+    document.getElementById("extraPointButton").disabled = true;
+    document.getElementById("twoPointButton").disabled = true;
+    document.getElementById("fieldGoalButton").disabled = true;
+    document.getElementById("choosePlayButton").disabled = true;
+    document.getElementById("rushButton").disabled = true;
+    document.getElementById("passButton").disabled = true;
+    document.getElementById("footballContainer").style.left = "50%";
+}
 
 function resetGame(){
     document.getElementById("missouriScore").innerHTML = 0;
@@ -142,8 +164,8 @@ function missouriTurn(){
                 resetGame();
             }
             else{
-                alert("TIE GAME! Click ok to play again.")
-                resetGame();
+                document.getElementById("messageDisplay").innerHTML = "OVERTIME! The next 3 possesssions will decide the winner!";
+                overtime();
             }
         }
     }
@@ -160,51 +182,52 @@ function missouriTurn(){
             resetGame();
         }
         else{
-            alert("TIE GAME! Click ok to play again.")
-            resetGame();
+            document.getElementById("messageDisplay").innerHTML = "OVERTIME! The next 3 possesssions will decide the winner!";
+            overtime();
         }
     }
     else{
         document.getElementById("kickoffButton").disabled = false;
         document.getElementById("extraPointButton").disabled = true;
+        document.getElementById("twoPointButton").disabled = true;
         document.getElementById("fieldGoalButton").disabled = true;
         document.getElementById("choosePlayButton").disabled = true;
         document.getElementById("rushButton").disabled = true;
         document.getElementById("passButton").disabled = true;
         document.getElementById("missouriButton").disabled = true;
         document.getElementById("missouriPossessionCounter").innerHTML = missouriPossessionsRemaining - 1;
-        let opponentOutcome = rollDice(8);
-        if(opponentOutcome == 1 || opponentOutcome == 2 || opponentOutcome == 3){
+        let opponentOutcome = rollDice(16);
+        if(opponentOutcome <= 9){
             console.log("they didn't score");
             let score = 0;
             document.getElementById("messageDisplay").innerHTML = "Missouri didn't score. Click Kickoff.";
             let missouriScore = parseInt(document.getElementById("missouriScore").innerHTML);
             document.getElementById("missouriScore").innerHTML = missouriScore + score;
-            document.getElementById("footballContainer").style.left = "88.25%";
+            calcBallPositionMissouriNoScore(yardsToTouchdown);
         }
-        else if(opponentOutcome == 4 || opponentOutcome == 5){
+        else if(opponentOutcome == 10 || opponentOutcome == 11 || opponentOutcome == 12){
             console.log("they scored a field goal");
             let score = 3;
             document.getElementById("messageDisplay").innerHTML = "Missouri kicked a field goal! Click Kickoff.";
             let missouriScore = parseInt(document.getElementById("missouriScore").innerHTML);
             document.getElementById("missouriScore").innerHTML = missouriScore + score;
-            calcBallPosition(yardsToTouchdown);
+            calcBallPositionMissouri(yardsToTouchdown);
         }
-        else if(opponentOutcome == 6){
+        else if(opponentOutcome == 13){
             console.log("they scored a TD but missed the XP");
             let score = 6;
             document.getElementById("messageDisplay").innerHTML = "Missouri scored a Touchdown but missed the extra point! Click Kickoff.";
             let missouriScore = parseInt(document.getElementById("missouriScore").innerHTML);
             document.getElementById("missouriScore").innerHTML = missouriScore + score;
-            calcBallPosition(yardsToTouchdown);
+            calcBallPositionMissouri(yardsToTouchdown);
         }
-        else if(opponentOutcome == 7){
+        else if(opponentOutcome == 14 || opponentOutcome == 15){
             console.log("they scored a TD and made the XP");
             let score = 7;
             document.getElementById("messageDisplay").innerHTML = "Missouri scored a Touchdown and the extra point! Click Kickoff.";
             let missouriScore = parseInt(document.getElementById("missouriScore").innerHTML);
             document.getElementById("missouriScore").innerHTML = missouriScore + score;
-            calcBallPosition(yardsToTouchdown);
+            calcBallPositionMissouri(yardsToTouchdown);
         }
         else{
             console.log("they scored a TD and a two point conversion");
@@ -212,7 +235,7 @@ function missouriTurn(){
             document.getElementById("messageDisplay").innerHTML = "Missouri scored a Touchdown and the two-point conversion! Click Kickoff.";
             let missouriScore = parseInt(document.getElementById("missouriScore").innerHTML);
             document.getElementById("missouriScore").innerHTML = missouriScore + score;
-            calcBallPosition(yardsToTouchdown);
+            calcBallPositionMissouri(yardsToTouchdown);
         }
         document.getElementById("kickoffButton").disabled = false;
     }
@@ -394,7 +417,7 @@ function choosePass(){
     let yardsToTouchdown = parseInt(document.getElementById("yardsToTouchdown").innerHTML);
     let downCount = parseInt(document.getElementById("downCounter").innerHTML);
     let yardsToFirstDown = parseInt(document.getElementById("yardsToFirstDown").innerHTML);
-    let passOutcome = rollDice(8);
+    let passOutcome = rollDice(20);
     if(downCount < 5 && yardsToTouchdown > 0){
         console.log("play is happening");
         document.getElementById("choosePlayButton").disabled = false;
@@ -416,7 +439,7 @@ function choosePass(){
             calcBallPosition(ballMovement);
             return interception;
         }
-        else if(passOutcome == 2){
+        else if(passOutcome == 2 || passOutcome == 3){
             let sack = rollDice(6) * -1;
             document.getElementById("messageDisplay").innerHTML = "Kansas was sacked for " + sack + " yards. Click Next Play.";
             document.getElementById("yardsToTouchdown").innerHTML = yardsToTouchdown - sack;
@@ -426,11 +449,11 @@ function choosePass(){
             return sack;
             //need to generate the ability to reset the down here and move
         }
-        else if(passOutcome == 3 || passOutcome == 4){
+        else if(passOutcome == 4 || passOutcome == 5 || passOutcome == 6 || passOutcome == 7 || passOutcome == 8){
             document.getElementById("messageDisplay").innerHTML = "Kansas' pass is incomplete.  Click Next Play.";
             //need to generate the ability to reset the down here
         }
-        else if(passOutcome == 5 || passOutcome == 6){
+        else if(passOutcome == 9 || passOutcome == 10 || passOutcome == 11 || passOutcome == 12 || passOutcome == 13 || passOutcome == 14 || passOutcome == 15){
             let shortPass = rollDice(10);
             document.getElementById("messageDisplay").innerHTML = "Kansas completed a pass for " + shortPass + " yards. Click Next Play.";
             document.getElementById("yardsToTouchdown").innerHTML = yardsToTouchdown - shortPass;
@@ -440,7 +463,7 @@ function choosePass(){
             return shortPass;
             //need to generate the ability to move the player forward this amount of yards
         }
-        else if(passOutcome == 7){
+        else if(passOutcome == 16 || passOutcome == 17 || passOutcome == 18 || passOutcome == 20){
             let longPass = rollDice(20);
             document.getElementById("messageDisplay").innerHTML = "Kansas completed a pass for " + longPass + " yards. Click Next Play.";
             document.getElementById("yardsToTouchdown").innerHTML = yardsToTouchdown - longPass;
@@ -475,7 +498,7 @@ function choosePass(){
 }
 
 function extraPoint(){
-    let xpOutcome = rollDice(4);
+    let xpOutcome = rollDice(20);
     document.getElementById("missouriButton").disabled = false;
     document.getElementById("extraPointButton").disabled = true;
     document.getElementById("twoPointButton").disabled = true;
@@ -492,7 +515,7 @@ function extraPoint(){
         calcBallPosition(ballMovement);
         return xp;
     }
-    else if(xpOutcome == 2 || xpOutcome == 3){
+    else{
         let xp = 1;
         document.getElementById("messageDisplay").innerHTML = "Extra point good! Click Missouri Possession";
         document.getElementById("possessionArrow").innerHTML = ">>>";
@@ -504,19 +527,6 @@ function extraPoint(){
         let ballMovement = document.getElementById("yardsToTouchdown").innerHTML;
         calcBallPosition(ballMovement);
         return xp;
-    }
-    else{
-        let twoPoint = 2;
-        document.getElementById("messageDisplay").innerHTML = "Kansas went for the two point conversion and converted! Click Missouri Possession";
-        document.getElementById("possessionArrow").innerHTML = ">>>";
-        document.getElementById("yardsToFirstDown").innerHTML = 10;
-        document.getElementById("yardsToTouchdown").innerHTML = 100;
-        document.getElementById("downCounter").innerHTML = 0;
-        let kansasScore = parseInt(document.getElementById("kansasScore").innerHTML);
-        document.getElementById("kansasScore").innerHTML = kansasScore + twoPoint;
-        let ballMovement = document.getElementById("yardsToTouchdown").innerHTML;
-            calcBallPosition(ballMovement);
-        return twoPoint;
     }
 }
 
